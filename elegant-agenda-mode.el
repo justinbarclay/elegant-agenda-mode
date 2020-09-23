@@ -30,13 +30,13 @@
 ;;; Code:
 ;; Used to revert changes when elegant-agenda-mode is disabled.
 (defvar-local elegant-agenda-transforms nil "A list of faces and their associated specs.")
-
+(defcustom elegant-agenda-font "Yanone Kaffeesatz" "The font to use in an elegant agenda buffer")
 (defvar-local elegant-agenda-face-remappings
   (let ((face-height (face-attribute 'default :height)))
     (list
-     (list 'default (list :family "Yanone Kaffeesatz Light"
+     (list 'default (list :family elegant-agenda-font
                           :height (ceiling (* face-height 1.5)) :weight 'thin))
-     (list 'header-line (list :family "Yanone Kaffeesatz Light"
+     (list 'header-line (list :family elegant-agenda-font
                               :height (* face-height 2) :weight 'thin
                               :underline nil  :overline nil :box nil))
      (list 'bold (list :height (ceiling (* face-height 1.1)) :weight 'light))
@@ -88,7 +88,6 @@ generated from a built in command."
 (defun elegant-agenda--fix-tag-alignment ()
   "Use 'display :align-to instead of spaces in agenda."
   (goto-char (point-min))
-  (elegant-set-title)
   (setq-local word-wrap nil)
   (while (re-search-forward org-tag-group-re nil 'noerror)
     (put-text-property (match-beginning 0) (match-beginning 1) 'display
@@ -96,8 +95,8 @@ generated from a built in command."
                                                                                     1)))))))))
 (defun elegant-agenda--finalize-view ()
   "Function to be called after org-agenda-finalize."
-  (elegant-agenda-fix-tag-alignment)
-  (elegant-agenda--finalize-view))
+  (elegant-agenda--fix-tag-alignment)
+  (elegant-agenda--get-title))
 
 (defun elegant-agenda--enable ()
   "Set-up the current buffer to be more elegant."
@@ -110,7 +109,7 @@ generated from a built in command."
                   (face-remap-add-relative (car face-&-spec) (cadr face-&-spec)))
                 elegant-agenda-face-remappings))
   (setq-local mode-line-format nil)
-  (add-hook 'org-agenda-finalize-hook #'org-elegant-agenda-fix-tag-alignment))
+  (add-hook 'org-agenda-finalize-hook #'elegant-agenda--finalize-view))
 
 (defun elegant-agenda--disable ()
   "Resets the buffer's settings back to default.
