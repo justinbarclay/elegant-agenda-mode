@@ -1,0 +1,38 @@
+* Tasks
+** Recurring
+:PROPERTIES:
+:agenda-group: recurring
+:END:
+
+*** TODO Pay Internet bill
+SCHEDULED: <2020-09-29 Tue>
+    
+** TODO Take over the universe
+   DEADLINE: <2020-10-02 Fri>
+:PROPERTIES:
+:agenda-group: grandiose plans
+:END:
+*** TODO Take over the world
+    DEADLINE: <2020-09-28 Mon>
+*** TODO Take over the moon
+    DEADLINE: <2020-09-29 Tue>
+*** TODO Take over Mars
+    DEADLINE: <2020-09-30 Wed>
+** TODO [#A] [[file:~/.emacs.d/README.org::*Agenda Custom functions][Submit elegant-agenda-mode to melpa]]
+SCHEDULED: [2020-09-27 Sun 00:25]
+** TODO [#B] Order pizza
+SCHEDULED: <2020-09-28 Mon>
+** TODO Morning Yoga
+SCHEDULED: <2020-09-28 Mon 15:30 .+1d/2d>
+:PROPERTIES:
+:STYLE:    habit
+:LAST_REPEAT: [2020-09-18 Sun 12:14]
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2020-09-20 Sun 21:19]
+- State "DONE"       from "TODO" [2020-09-18 Sun 12:14]
+- State "DONE"       from "TODO" [2020-09-17 Thu 13:44]
+- State "DONE"       from "TODO" [2020-09-16 Thu 13:44]
+:END:
+** [#A] Zoom with president of the Arctic
+DEADLINE: <2020-09-28 Mon>

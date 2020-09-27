@@ -1,0 +1,60 @@
+Towards a more elegant agenda.
+* elegant-agenda-mode
+elegant-agenda-mode aims to utilize typography to make your agenda elegant and easy to read.
+* Examples
+elegant-agenda-mode works well with custom commands. For example with a command labeled as today, it will apply spacing based on category and use the agenda label as a header for the view.
+#+begin_src emacs-lisp
+  (setq org-agenda-custom-commands
+        '(("d" "Today"
+           ((tags-todo "SCHEDULED<\"<+1d>\"&PRIORITY=\"A\""
+                       ((org-agenda-skip-function
+                         '(org-agenda-skip-entry-if 'todo 'done))
+                        (org-agenda-overriding-header "High-priority unfinished tasks:")))
+            (agenda "" ((org-agenda-span 'day)
+                        (org-scheduled-delay-days -14)
+                        (org-agenda-overriding-header "Schedule")))
+            (tags-todo "SCHEDULED<\"<+1d>\""
+                       ((org-agenda-skip-function
+                         '(or (org-agenda-skip-entry-if 'done)
+                              (air-org-skip-subtree-if-priority ?A)))
+                        (org-agenda-overriding-header "Tasks:")))))))
+#+end_src
+
+#+CAPTION: An example of the agenda with a view of the days schedule.
+#+NAME:   fig:today
+[[./today.svg]]
+
+It works equally as well with a base agenda view.
+#+CAPTION: An example of the agenda with a view of the weeks schedule.
+#+NAME:   fig:week-example
+[[./week-example.svg]]
+* Font
+elegant-agenda-mode was designed to with [[https://fonts.google.com/specimen/Yanone+Kaffeesatz][Yanone Kaffeesatz]] in mind. However, if you prefer to use a different font you can set it with `elegant-agenda-font`
+#+begin_src elisp
+  (setq elegant-agenda-font "Some other font")
+#+end_src
+
+* Installing
+** From source
+You can install ~elegant-agenda-mode~ from source (this github repo)
+#+BEGIN_SRC shell
+  cd /path/for/elisp-packages
+  git clone git@github.com:justinbarclay/elegant-agenda-mode.git
+#+END_SRC
+
+After that add it to your load path and go wild.
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "/path/to/elegant-agenda-mode")
+  (add-hook org-agenda-hook elegant-agenda-mode)
+#+END_SRC
+
+** Straight and Use Package
+#+BEGIN_SRC emacs-lisp
+  (use-package elegant-agenda-mode
+    :straight (elegant-agenda-mode :type git :host github :repo "justincbarclay/elegant-agenda-moda.el")
+    :hook org-agenda-mode-hook) 
+#+END_SRC
+
+
+* Thanks
+This work was inspired by a post from [[https://github.com/rougier][@rougier]] on [[https://reddit.com/r/emacs/comments/i1wfnc/one_day_in_one_frame_mockup/][Reddit]].

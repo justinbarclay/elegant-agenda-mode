@@ -25,13 +25,13 @@
 ;;; Commentary:
 
 ;; This is an alpha version of the concept posted by Nicolas Rougier
-;; https://old.reddit.com/r/emacs/comments/i1wfnc/one_day_in_one_frame_mockup/
+;;
 
 ;;; Code:
 ;; Used to revert changes when elegant-agenda-mode is disabled.
 (defvar-local elegant-agenda-transforms nil "A list of faces and their associated specs.")
 (defcustom elegant-agenda-font "Yanone Kaffeesatz" "The font to use in an elegant agenda buffer")
-(defvar-local elegant-agenda-face-remappings
+(defvar elegant-agenda-face-remappings
   (let ((face-height (face-attribute 'default :height)))
     (list
      (list 'default (list :family elegant-agenda-font
@@ -39,9 +39,9 @@
      (list 'header-line (list :family elegant-agenda-font
                               :height (* face-height 2) :weight 'thin
                               :underline nil  :overline nil :box nil))
-     (list 'bold (list :height (ceiling (* face-height 1.1)) :weight 'light))
-     '(italic (:foreground "orange"))
-     '(org-link (:foreground "white"))))
+     (list 'org-agenda-date-today (list :weight 'regular))
+     (list 'org-agenda-structure (list :weight 'regular))
+     (list 'bold (list :height (ceiling (* face-height 1.1)) :weight 'thin))))
   "A list of faces and the associated specs that will be remapped
   when elegant-agenda-mode is enabled")
 
@@ -52,7 +52,7 @@ The title is the name of the custom command used to generate the
 current view. No title will be displayed if the view was
 generated from a built in command."
   (when-let ((title (when (and org-agenda-redo-command
-                               (cadr org-agenda-redo-command))
+                               (stringp (cadr org-agenda-redo-command)))
                       (format "—  %s"
                               (mapconcat
                                'identity
@@ -93,6 +93,7 @@ generated from a built in command."
     (put-text-property (match-beginning 0) (match-beginning 1) 'display
                        `(space . (:align-to (- right (,(string-display-pixel-width (match-string
                                                                                     1)))))))))
+
 (defun elegant-agenda--finalize-view ()
   "Function to be called after org-agenda-finalize."
   (elegant-agenda--fix-tag-alignment)
