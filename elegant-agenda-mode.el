@@ -1,11 +1,12 @@
-;;; elegant-agenda-mode --- Towards a more elegant agenda -*- lexical-binding: t; -*-
+;;; elegant-agenda-mode.el --- Towards a more elegant agenda -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2020  Justin Barclay
 
 ;; Author: Justin Barclay <justinbarclay@gmail.com>
 ;; URL: https://github.com/justinbarclay/elegant-agenda-mode
 ;; Version: 0.1.0-alpha
-;; Keywords: agenda theme
+;; Package-Requires: ((emacs "26.1"))
+;; Keywords: faces
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -24,13 +25,27 @@
 
 ;;; Commentary:
 
-;; This is an alpha version of the concept posted by Nicolas Rougier
-;;
-
+;; Helping your agenda have some elegance and breathing room.
+;; As inspired by @
 ;;; Code:
+
+
+(eval-when-compile
+  (declare-function face-remap-remove-relative "face-remap" t t)
+  (defvar org-agenda-redo-command)
+  (defvar org-tag-group-re))
+
+;;; Customization
+(defcustom elegant-agenda-font
+  "Yanone Kaffeesatz"
+  "The default font to use in an elegant agenda buffer."
+  :type 'string
+  :group 'elegant-agenda-mode)
+
 ;; Used to revert changes when elegant-agenda-mode is disabled.
 (defvar-local elegant-agenda-transforms nil "A list of faces and their associated specs.")
-(defcustom elegant-agenda-font "Yanone Kaffeesatz" "The font to use in an elegant agenda buffer")
+
+
 (defvar elegant-agenda-face-remappings
   (let ((face-height (face-attribute 'default :height)))
     (list
@@ -42,8 +57,9 @@
      (list 'org-agenda-date-today (list :weight 'regular))
      (list 'org-agenda-structure (list :weight 'regular))
      (list 'bold (list :height (ceiling (* face-height 1.1)) :weight 'thin))))
-  "A list of faces and the associated specs that will be remapped
-  when elegant-agenda-mode is enabled")
+  "A list of faces and the associated specs.
+
+This list is used to control the styling in an elegant-agenda-buffer.")
 
 (defun elegant-agenda--get-title ()
   "Set an applicable title in the agenda buffer.
@@ -69,13 +85,14 @@ generated from a built in command."
 ;; https://lists.gnu.org/archive/html/emacs-orgmode/2020-05/msg00680.html
 (defun elegant-agenda--string-display-pixel-width (string &optional mode)
   "Calculate pixel width of STRING.
-  Optional MODE specifies major mode used for display."
+
+Optional MODE specifies major mode used for display."
   (with-temp-buffer
     (with-silent-modifications
       (setf (buffer-string) string))
     (when (fboundp mode)
       (funcall mode)
-      (font-lock-fontify-buffer))
+      (font-lock-ensure))
     (if (not (get-buffer-window (current-buffer)))
         (save-window-excursion
           ;; Avoid errors if the selected window is a dedicated one,
@@ -90,12 +107,16 @@ generated from a built in command."
   (goto-char (point-min))
   (setq-local word-wrap nil)
   (while (re-search-forward org-tag-group-re nil 'noerror)
-    (put-text-property (match-beginning 0) (match-beginning 1) 'display
-                       `(space . (:align-to (- right (,(string-display-pixel-width (match-string
-                                                                                    1)))))))))
+    (put-text-property (match-beginning 0)
+                       (match-beginning 1)
+                       'display
+                       `(space . (:align-to
+                                  (- right
+                                     (,(elegant-agenda--string-display-pixel-width
+                                        (match-string 1)))))))))
 
 (defun elegant-agenda--finalize-view ()
-  "Function to be called after org-agenda-finalize."
+  "Finalize the elegant agenda view."
   (elegant-agenda--fix-tag-alignment)
   (elegant-agenda--get-title))
 
@@ -113,7 +134,7 @@ generated from a built in command."
   (add-hook 'org-agenda-finalize-hook #'elegant-agenda--finalize-view))
 
 (defun elegant-agenda--disable ()
-  "Resets the buffer's settings back to default.
+  "Reset the buffer's settings back to default.
 
 For when you're tired of being elegant."
   (setq-local line-spacing (default-value 'line-spacing))
@@ -135,3 +156,6 @@ For when you're tired of being elegant."
       (elegant-agenda--enable)
     (elegant-agenda--disable))
   (force-window-update (current-buffer)))
+
+(provide 'elegant-agenda-mode)
+;;; elegant-agenda-mode.el ends here
