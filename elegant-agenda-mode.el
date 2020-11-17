@@ -29,10 +29,13 @@
 ;; As inspired by @
 ;;; Code:
 
-
 (eval-when-compile
   (declare-function face-remap-remove-relative "face-remap" t t)
   (defvar org-agenda-redo-command)
+  (defvar org-agenda-use-time-grid)
+  (defvar org-agenda-block-separator)
+  (defvar org-agenda-use-time-grid)
+  (defvar org-agenda-block-separator)
   (defvar org-tag-group-re))
 
 ;;; Customization
