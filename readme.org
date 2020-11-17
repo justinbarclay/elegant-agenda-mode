@@ -20,14 +20,30 @@ elegant-agenda-mode works well with custom commands. For example with a command 
                         (org-agenda-overriding-header "Tasks:")))))))
 #+end_src
 
-#+CAPTION: An example of the agenda with a view of the days schedule.
+#+CAPTION: An example of the agenda with a view of the days schedule using elegant-emacs-light theme.
 #+NAME:   fig:today
-[[./today.svg]]
+[[./today-elegant-light.svg]]
+
+#+CAPTION: An example of the agenda with a view of the days schedule using elegant-emacs-dark theme.
+#+NAME:   fig:today
+[[./today-elegant-dark.svg]]
+
+#+CAPTION: An example of the agenda with a view of the days schedule doom-using dracula theme.
+#+NAME:   fig:today
+[[./today-dracula.svg]]
 
 It works equally as well with a base agenda view.
-#+CAPTION: An example of the agenda with a view of the weeks schedule.
+#+CAPTION: An example of the agenda with a view of the weeks schedule using elegant-emacs-light theme.
 #+NAME:   fig:week-example
-[[./week-example.svg]]
+[[./week-elegant-light.svg]]
+
+#+CAPTION: An example of the agenda with a view of the weeks schedule using elegant-emacs-dark theme..
+#+NAME:   fig:week-example
+[[./week-elegant-dark.svg]]
+
+#+CAPTION: An example of the agenda with a view of the weeks schedule using doom-dracula theme.
+#+NAME:   fig:week-example
+[[./week-dracula.svg]]
 * Font
 elegant-agenda-mode was designed to with [[https://fonts.google.com/specimen/Yanone+Kaffeesatz][Yanone Kaffeesatz]] in mind. However, if you prefer to use a different font you can set it with `elegant-agenda-font`
 #+begin_src elisp
