@@ -1,8 +1,8 @@
-Towards a more elegant agenda.
+Helping you make your agenda more elegant
 * elegant-agenda-mode
-elegant-agenda-mode aims to utilize typography to make your agenda elegant and easy to read.
+elegant-agenda-mode aims to utilize typography to make org-agenda elegant and easy to read.
 * Examples
-elegant-agenda-mode works well with custom commands. For example with a command labeled as today, it will apply spacing based on category and use the agenda label as a header for the view.
+elegant-agenda-mode works well with custom agenda commands. For example with a command labeled as today, it will apply spacing based on category and use the agenda label as a header for the view.
 #+begin_src emacs-lisp
   (setq org-agenda-custom-commands
         '(("d" "Today"

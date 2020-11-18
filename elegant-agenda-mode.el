@@ -1,4 +1,4 @@
-;;; elegant-agenda-mode.el --- Towards a more elegant agenda -*- lexical-binding: t; -*-
+;;; elegant-agenda-mode.el --- An elegant theme for your org-agenda -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2020  Justin Barclay
 
@@ -7,6 +7,7 @@
 ;; Version: 0.1.0-alpha
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces
+;; Summary: A minimalist and elegant theme for org-agenda
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -25,8 +26,10 @@
 
 ;;; Commentary:
 
-;; Helping your agenda have some elegance and breathing room.
-;; As inspired by @
+;; elegant-agenda-mode uses fonts, Yanone Kaffeesatz and typography to give your org-agenda some
+;; breathing room and elegance. Screenshots can be found in the project repository.
+
+;; This package was inspired by the work Nicolas Rougier.
 ;;; Code:
 
 (eval-when-compile
