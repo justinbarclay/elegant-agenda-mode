@@ -77,7 +77,7 @@ generated from a built in command."
                                (stringp (cadr org-agenda-redo-command)))
                       (format "—  %s"
                               (mapconcat
-                               'identity
+                               #'identity
                                (split-string-and-unquote (cadr org-agenda-redo-command) "")
                                " "))))
              (width (window-width)))
