@@ -1,3 +1,5 @@
+[[https://melpa.org/#/elegant-agenda-mode][file:https://melpa.org/packages/elegant-agenda-mode-badge.svg]]
+
 Helping you make your agenda more elegant
 * elegant-agenda-mode
 elegant-agenda-mode aims to utilize typography to make org-agenda elegant and easy to read.
