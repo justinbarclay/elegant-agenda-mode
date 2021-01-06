@@ -64,8 +64,7 @@ This controls whether elegant-agenda applies tag fixes."
 ;; Used to revert changes when elegant-agenda-mode is disabled.
 (defvar-local elegant-agenda-transforms nil "A list of faces and their associated specs.")
 
-
-(defun elegant-agenda-face-remappings ()
+(defun elegant-agenda--face-remappings ()
   "Generates a list of faces and the associated specs.
 
 This list is used to control the styling in an elegant-agenda-buffer."
@@ -77,10 +76,11 @@ This list is used to control the styling in an elegant-agenda-buffer."
                               :height (* face-height 2) :weight 'thin
                               :underline nil  :overline nil :box nil))
      (list 'org-agenda-date-today (list :weight 'regular))
+     (list 'org-agenda-done (list :weight 'thin))
      (list 'org-agenda-structure (list :weight 'regular))
      (list 'bold (list :height (ceiling (* face-height 1.1)) :weight 'thin)))))
 
-(defun elegant-agenda-thin-face-remappings ()
+(defun elegant-agenda-thin--face-remappings ()
   "A list of faces that strive to be thin or light.
 
 This list is used to control the styling in an elegant-agenda-buffer."
@@ -152,11 +152,52 @@ Optional MODE specifies major mode used for display."
                                      (,(elegant-agenda--string-display-pixel-width
                                         (match-string 1)))))))))
 
+(defun elegant-agenda--align-tags (&optional line)
+  "Align all tags in agenda items to `org-agenda-tags-column'.
+When optional argument LINE is non-nil, align tags only on the
+current line.
+
+This is mostly copy and pasted from the org-agenda file, but
+reworked based on default font size and not default frame font
+size."
+  (let ((inhibit-read-only t)
+	(org-agenda-tags-column (if (eq 'auto org-agenda-tags-column)
+				    (- (floor (/ (window-text-width nil 't)
+                                                 (window-font-width nil 'default))))
+				  org-agenda-tags-column))
+	(end (and line (line-end-position)))
+	l c)
+    (save-excursion
+      (goto-char (if line (line-beginning-position) (point-min)))
+      (while (re-search-forward org-tag-group-re end t)
+	(add-text-properties
+	 (match-beginning 1) (match-end 1)
+	 (list 'face (delq nil (let ((prop (get-text-property
+					    (match-beginning 1) 'face)))
+				 (or (listp prop) (setq prop (list prop)))
+				 (if (memq 'org-tag prop)
+				     prop
+				   (cons 'org-tag prop))))))
+	(setq l (string-width (match-string 1))
+	      c (if (< org-agenda-tags-column 0)
+		    (- (abs org-agenda-tags-column) l)
+		  org-agenda-tags-column))
+	(goto-char (match-beginning 1))
+	(delete-region (save-excursion (skip-chars-backward " \t") (point))
+		       (point))
+	(insert (org-add-props
+		    (make-string (max 1 (- c (current-column))) ?\s)
+		    (plist-put (copy-sequence (text-properties-at (point)))
+			       'face nil))))
+      (goto-char (point-min))
+      (org-font-lock-add-tag-faces (point-max)))))
+
 (defun elegant-agenda--finalize-view ()
   "Finalize the elegant agenda view."
-  (when (not elegant-agenda-mono-font)
-    (elegant-agenda--fix-tag-alignment))
-  (elegant-agenda--get-title))
+  (elegant-agenda--get-title)
+  (if (not elegant-agenda-mono-font)
+      (elegant-agenda--fix-tag-alignment)
+    (elegant-agenda--align-tags)))
 
 (defun elegant-agenda--enable ()
   "Set-up the current buffer to be more elegant."
@@ -168,8 +209,8 @@ Optional MODE specifies major mode used for display."
         (mapcar (lambda (face-&-spec)
                   (face-remap-add-relative (car face-&-spec) (cadr face-&-spec)))
                 (if (eq elegant-agenda--header-preference 'thin)
-                    (elegant-agenda-thin-face-remappings)
-                  (elegant-agenda-face-remappings))))
+                    (elegant-agenda--thin-face-remappings)
+                  (elegant-agenda--face-remappings))))
   (setq-local mode-line-format nil)
   (add-hook 'org-agenda-finalize-hook #'elegant-agenda--finalize-view))
 
