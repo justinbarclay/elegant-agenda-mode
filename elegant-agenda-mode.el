@@ -37,7 +37,7 @@
 ;; Then if you use a mono spaced font you'll also want to let elegant-agenda to know about that.
 ;; ex: (setq elegant-agenda-is-mono-font 't)
 
-;; This package was inspired work from Nicolas Rougier.
+;; This package was inspired by work from Nicolas Rougier.
 ;;; Code:
 
 (eval-when-compile
@@ -216,7 +216,7 @@ size."
   (setq elegant-agenda-transforms
         (mapcar (lambda (face-&-spec)
                   (face-remap-add-relative (car face-&-spec) (cadr face-&-spec)))
-                (if (eq elegant-agenda--header-preference 'thin)
+                (if (eq elegant-agenda-header-preference 'thin)
                     (elegant-agenda--thin-face-remappings)
                   (elegant-agenda--face-remappings))))
   (setq-local mode-line-format nil)
