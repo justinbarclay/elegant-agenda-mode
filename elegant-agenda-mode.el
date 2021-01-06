@@ -65,7 +65,10 @@ This controls whether elegant-agenda applies tag fixes."
 (defvar-local elegant-agenda-transforms nil "A list of faces and their associated specs.")
 
 
-(defvar-local elegant-agenda-face-remappings
+(defun elegant-agenda-face-remappings ()
+  "Generates a list of faces and the associated specs.
+
+This list is used to control the styling in an elegant-agenda-buffer."
   (let ((face-height (face-attribute 'default :height)))
     (list
      (list 'default (list :family elegant-agenda-font
@@ -75,12 +78,12 @@ This controls whether elegant-agenda applies tag fixes."
                               :underline nil  :overline nil :box nil))
      (list 'org-agenda-date-today (list :weight 'regular))
      (list 'org-agenda-structure (list :weight 'regular))
-     (list 'bold (list :height (ceiling (* face-height 1.1)) :weight 'thin))))
-  "A list of faces and the associated specs.
+     (list 'bold (list :height (ceiling (* face-height 1.1)) :weight 'thin)))))
 
-This list is used to control the styling in an elegant-agenda-buffer.")
+(defun elegant-agenda-thin-face-remappings ()
+  "A list of faces that strive to be thin or light.
 
-(defvar-local elegant-agenda-thin-face-remappings
+This list is used to control the styling in an elegant-agenda-buffer."
   (let ((face-height (face-attribute 'default :height)))
     (list
      (list 'default (list :family elegant-agenda-font
@@ -93,10 +96,7 @@ This list is used to control the styling in an elegant-agenda-buffer.")
      (list 'org-agenda-done (list :weight 'thin))
      (list 'bold (list :height (ceiling (* face-height 1.1)) :weight 'thin))
      (list 'org-agenda-date-weekend (list :weight 'thin :height (ceiling (* face-height 1.7))))
-     (list 'org-agenda-date (list :weight 'thin :height (ceiling (* face-height 1.7))))))
-  "A list of faces that strive to be thin or light.
-
-This list is used to control the styling in an elegant-agenda-buffer.")
+     (list 'org-agenda-date (list :weight 'thin :height (ceiling (* face-height 1.7)))))))
 
 (defun elegant-agenda--get-title ()
   "Set an applicable title in the agenda buffer.
@@ -168,8 +168,8 @@ Optional MODE specifies major mode used for display."
         (mapcar (lambda (face-&-spec)
                   (face-remap-add-relative (car face-&-spec) (cadr face-&-spec)))
                 (if (eq elegant-agenda--header-preference 'thin)
-                    elegant-agenda-thin-face-remappings
-                    elegant-agenda-face-remappings)))
+                    (elegant-agenda-thin-face-remappings)
+                  (elegant-agenda-face-remappings))))
   (setq-local mode-line-format nil)
   (add-hook 'org-agenda-finalize-hook #'elegant-agenda--finalize-view))
 
