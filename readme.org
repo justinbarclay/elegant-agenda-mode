@@ -52,6 +52,11 @@ elegant-agenda-mode was designed to with [[https://fonts.google.com/specimen/Yan
   (setq elegant-agenda-font "Some other font")
 #+end_src
 
+If you're alternative font is monospaced and your tags aren't being aligned properly, you can set `elegant-agenda-is-mono-font` and elegant-agenda will realign tags manually.
+#+begin_src elisp
+  (setq elegant-agenda-is-mono-font 't)
+#+end_src
+
 * Installing
 ** From source
 You can install ~elegant-agenda-mode~ from source (this github repo)
