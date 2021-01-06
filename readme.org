@@ -63,7 +63,8 @@ You can install ~elegant-agenda-mode~ from source (this github repo)
 After that add it to your load path and go wild.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path "/path/to/elegant-agenda-mode")
-  (add-hook org-agenda-hook elegant-agenda-mode)
+  (require 'elegant-agenda-mode)
+  (add-hook 'org-agenda-mode-hook 'elegant-agenda-mode)
 #+END_SRC
 
 ** Straight and Use Package

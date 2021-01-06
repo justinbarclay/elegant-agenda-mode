@@ -48,11 +48,24 @@
   :type 'string
   :group 'elegant-agenda-mode)
 
+(defcustom elegant-agenda-mono-font nil
+  "Describes whether the font elegant agenda is using is monospace.
+
+This controls whether elegant-agenda applies tag fixes."
+  :type 'boolean
+  :group 'elegant-agenda-mode)
+
+(defcustom elegant-agenda--header-preference 'regular
+  "A choice of what style to set headers in elegant-agenda-mode"
+  :type '(radio (const :tag "Thin" thin)
+                (const :tag "Regular" regular))
+  :group 'elegant-agenda-mode)
+
 ;; Used to revert changes when elegant-agenda-mode is disabled.
 (defvar-local elegant-agenda-transforms nil "A list of faces and their associated specs.")
 
 
-(defvar elegant-agenda-face-remappings
+(defvar-local elegant-agenda-face-remappings
   (let ((face-height (face-attribute 'default :height)))
     (list
      (list 'default (list :family elegant-agenda-font
@@ -64,6 +77,24 @@
      (list 'org-agenda-structure (list :weight 'regular))
      (list 'bold (list :height (ceiling (* face-height 1.1)) :weight 'thin))))
   "A list of faces and the associated specs.
+
+This list is used to control the styling in an elegant-agenda-buffer.")
+
+(defvar-local elegant-agenda-thin-face-remappings
+  (let ((face-height (face-attribute 'default :height)))
+    (list
+     (list 'default (list :family elegant-agenda-font
+                          :height (ceiling (* face-height 1.5)) :weight 'thin))
+     (list 'header-line (list :family elegant-agenda-font
+                              :height (* face-height 2) :weight 'thin
+                              :underline nil  :overline nil :box nil))
+     (list 'org-agenda-date-today (list :weight 'thin :height (ceiling (* face-height 1.8))))
+     (list 'org-agenda-structure (list :weight 'thin :height (ceiling (* face-height 1.9))))
+     (list 'org-agenda-done (list :weight 'thin))
+     (list 'bold (list :height (ceiling (* face-height 1.1)) :weight 'thin))
+     (list 'org-agenda-date-weekend (list :weight 'thin :height (ceiling (* face-height 1.7))))
+     (list 'org-agenda-date (list :weight 'thin :height (ceiling (* face-height 1.7))))))
+  "A list of faces that strive to be thin or light.
 
 This list is used to control the styling in an elegant-agenda-buffer.")
 
@@ -123,7 +154,8 @@ Optional MODE specifies major mode used for display."
 
 (defun elegant-agenda--finalize-view ()
   "Finalize the elegant agenda view."
-  (elegant-agenda--fix-tag-alignment)
+  (when (not elegant-agenda-mono-font)
+    (elegant-agenda--fix-tag-alignment))
   (elegant-agenda--get-title))
 
 (defun elegant-agenda--enable ()
@@ -135,7 +167,9 @@ Optional MODE specifies major mode used for display."
   (setq elegant-agenda-transforms
         (mapcar (lambda (face-&-spec)
                   (face-remap-add-relative (car face-&-spec) (cadr face-&-spec)))
-                elegant-agenda-face-remappings))
+                (if (eq elegant-agenda--header-preference 'thin)
+                    elegant-agenda-thin-face-remappings
+                    elegant-agenda-face-remappings)))
   (setq-local mode-line-format nil)
   (add-hook 'org-agenda-finalize-hook #'elegant-agenda--finalize-view))
 
