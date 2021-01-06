@@ -4,7 +4,7 @@
 
 ;; Author: Justin Barclay <justinbarclay@gmail.com>
 ;; URL: https://github.com/justinbarclay/elegant-agenda-mode
-;; Version: 0.1.0-alpha
+;; Version: 0.2.0
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces
 ;; Summary: A minimalist and elegant theme for org-agenda
@@ -29,7 +29,15 @@
 ;; elegant-agenda-mode uses fonts, Yanone Kaffeesatz and typography to give your org-agenda some
 ;; breathing room and elegance. Screenshots can be found in the project repository.
 
-;; This package was inspired by the work Nicolas Rougier.
+;; elegant-agenda-mode has a very small amount of customization.
+
+;; If you want to change the font family used in the buffer you could would set elegant-agenda-font
+;; ex: (setq elegant-agenda-font "Roboto Mono")
+
+;; Then if you use a mono spaced font you'll also want to let elegant-agenda to know about that.
+;; ex: (setq elegant-agenda-is-mono-font 't)
+
+;; This package was inspired work from Nicolas Rougier.
 ;;; Code:
 
 (eval-when-compile
@@ -48,14 +56,14 @@
   :type 'string
   :group 'elegant-agenda-mode)
 
-(defcustom elegant-agenda-mono-font nil
+(defcustom elegant-agenda-is-mono-font nil
   "Describes whether the font elegant agenda is using is monospace.
 
 This controls whether elegant-agenda applies tag fixes."
   :type 'boolean
   :group 'elegant-agenda-mode)
 
-(defcustom elegant-agenda--header-preference 'regular
+(defcustom elegant-agenda-header-preference 'regular
   "A choice of what style to set headers in elegant-agenda-mode"
   :type '(radio (const :tag "Thin" thin)
                 (const :tag "Regular" regular))
@@ -195,7 +203,7 @@ size."
 (defun elegant-agenda--finalize-view ()
   "Finalize the elegant agenda view."
   (elegant-agenda--get-title)
-  (if (not elegant-agenda-mono-font)
+  (if (not elegant-agenda-is-mono-font)
       (elegant-agenda--fix-tag-alignment)
     (elegant-agenda--align-tags)))
 
