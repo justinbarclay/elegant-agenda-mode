@@ -42,7 +42,10 @@
 
 (eval-when-compile
   (declare-function face-remap-remove-relative "face-remap" t t)
+  (declare-function org-add-props "org-macs" t t)
+  (declare-function org-font-lock-add-tag-faces "org" t t)
   (defvar org-agenda-redo-command)
+  (defvar org-agenda-tags-column)
   (defvar org-agenda-use-time-grid)
   (defvar org-agenda-block-separator)
   (defvar org-agenda-use-time-grid)
@@ -88,7 +91,7 @@ This list is used to control the styling in an elegant-agenda-buffer."
      (list 'org-agenda-structure (list :weight 'regular))
      (list 'bold (list :height (ceiling (* face-height 1.1)) :weight 'thin)))))
 
-(defun elegant-agenda-thin--face-remappings ()
+(defun elegant-agenda--thin-face-remappings ()
   "A list of faces that strive to be thin or light.
 
 This list is used to control the styling in an elegant-agenda-buffer."
