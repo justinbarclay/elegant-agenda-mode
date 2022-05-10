@@ -72,6 +72,19 @@ This controls whether elegant-agenda applies tag fixes."
                 (const :tag "Regular" regular))
   :group 'elegant-agenda-mode)
 
+(defcustom elegant-agenda-font-scaling-factor 1
+  "The default scaling factor to apply to all fonts modified by elegant agenda. *warning*
+
+By customizing this font you may run into issues where
+tags aren't properly aligned. So, change at your discretion."
+  :type 'number
+  :group 'elegant-agenda-mode)
+
+(defcustom elegant-agenda-line-spacing 8
+  "The default amount of space to put between lines in an elegant agenda buffer."
+  :type 'number
+  :group 'elegant-agenda-mode)
+
 ;; Used to revert changes when elegant-agenda-mode is disabled.
 (defvar-local elegant-agenda-transforms nil "A list of faces and their associated specs.")
 
@@ -79,35 +92,37 @@ This controls whether elegant-agenda applies tag fixes."
   "Generates a list of faces and the associated specs.
 
 This list is used to control the styling in an elegant-agenda-buffer."
-  (let ((face-height (face-attribute 'default :height)))
+  (let* ((face-height (face-attribute 'default :height))
+         (scaled-height  (ceiling (* face-height elegant-agenda-font-scaling-factor))))
     (list
      (list 'default (list :family elegant-agenda-font
-                          :height (ceiling (* face-height 1.5)) :weight 'thin))
+                          :height (ceiling (* scaled-height 1.5)) :weight 'thin))
      (list 'header-line (list :family elegant-agenda-font
-                              :height (* face-height 2) :weight 'thin
+                              :height (* scaled-height 2) :weight 'thin
                               :underline nil  :overline nil :box nil))
      (list 'org-agenda-date-today (list :weight 'regular))
      (list 'org-agenda-done (list :weight 'thin))
      (list 'org-agenda-structure (list :weight 'regular))
-     (list 'bold (list :height (ceiling (* face-height 1.1)) :weight 'thin)))))
+     (list 'bold (list :height (ceiling (* scaled-height 1.1)) :weight 'thin)))))
 
 (defun elegant-agenda--thin-face-remappings ()
   "A list of faces that strive to be thin or light.
 
 This list is used to control the styling in an elegant-agenda-buffer."
-  (let ((face-height (face-attribute 'default :height)))
+  (let* ((face-height (face-attribute 'default :height))
+         (scaled-height  (ceiling (* face-height elegant-agenda-font-scaling-factor))))
     (list
      (list 'default (list :family elegant-agenda-font
-                          :height (ceiling (* face-height 1.5)) :weight 'thin))
+                          :height (ceiling (* scaled-height 1.5)) :weight 'thin))
      (list 'header-line (list :family elegant-agenda-font
-                              :height (* face-height 2) :weight 'thin
+                              :height (* scaled-height 2) :weight 'thin
                               :underline nil  :overline nil :box nil))
-     (list 'org-agenda-date-today (list :weight 'thin :height (ceiling (* face-height 1.8))))
-     (list 'org-agenda-structure (list :weight 'thin :height (ceiling (* face-height 1.9))))
+     (list 'org-agenda-date-today (list :weight 'thin :height (ceiling (* scaled-height 1.8))))
+     (list 'org-agenda-structure (list :weight 'thin :height (ceiling (* scaled-height 1.9))))
      (list 'org-agenda-done (list :weight 'thin))
-     (list 'bold (list :height (ceiling (* face-height 1.1)) :weight 'thin))
-     (list 'org-agenda-date-weekend (list :weight 'thin :height (ceiling (* face-height 1.7))))
-     (list 'org-agenda-date (list :weight 'thin :height (ceiling (* face-height 1.7)))))))
+     (list 'bold (list :height (ceiling (* scaled-height 1.1)) :weight 'thin))
+     (list 'org-agenda-date-weekend (list :weight 'thin :height (ceiling (* scaled-height 1.7))))
+     (list 'org-agenda-date (list :weight 'thin :height (ceiling (* scaled-height 1.7)))))))
 
 (defun elegant-agenda--get-title ()
   "Set an applicable title in the agenda buffer.
@@ -212,7 +227,7 @@ size."
 
 (defun elegant-agenda--enable ()
   "Set-up the current buffer to be more elegant."
-  (setq-local line-spacing 8)
+  (setq-local line-spacing elegant-agenda-line-spacing)
   (setq-local org-agenda-use-time-grid nil)
   (setq-local org-agenda-block-separator "  ")
   (display-line-numbers-mode 0)
